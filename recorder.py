@@ -1,5 +1,4 @@
 import sys
-from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 import pyaudio
 import wave
@@ -14,7 +13,7 @@ if len(sys.argv) < 2:
 wf = wave.open(sys.argv[1], 'rb')
 audio = pyaudio.PyAudio()
 
-class Record(QThread):
+class Record():
       # count_changed = pyqtSignal(int)
       # print("Count changing", count_changed)
 
@@ -30,11 +29,13 @@ class Record(QThread):
                 stream_callback=self.callback)
             print("Starting Recording!!")
             self.stream.start_stream()
+            print(self.stream)
             # return self.stream
             # print("testing:", self.stream.start_stream())
             # self.count_changed.emit(self.stream.start_stream())
-            # while self.stream.is_active():
-            #       time.sleep(0.01)
+            if self.stream.is_active():
+                  return time.sleep(0.01)
+            return time.sleep(0.05)
             
       def stop_stream(self):
             print("Stopping Recording!!")
@@ -44,7 +45,7 @@ class Record(QThread):
             wf.close()
             audio.terminate()
 
-class Test(QWidget, QThread):
+class Test(QWidget):
       
       def __init__(self):
             super().__init__()
@@ -57,13 +58,13 @@ class Test(QWidget, QThread):
 
       def initUI(self):
             start_button = QPushButton('Start', self)
-            self.starting = Record()
-            start_button.clicked.connect(self.starting.stream_audio)
+            self.recorder = Record()
+            start_button.clicked.connect(self.recorder.stream_audio)
             start_button.resize(start_button.sizeHint())
             start_button.move(25, 50)
             
             stop_button = QPushButton('Stop', self)
-            stop_button.clicked.connect(self.starting.stop_stream)
+            stop_button.clicked.connect(self.recorder.stop_stream)
             stop_button.resize(stop_button.sizeHint())
             stop_button.move(165, 50)
 
