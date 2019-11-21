@@ -33,9 +33,16 @@ class Record():
             # return self.stream
             # print("testing:", self.stream.start_stream())
             # self.count_changed.emit(self.stream.start_stream())
-            if self.stream.is_active():
-                  return time.sleep(0.01)
-            return time.sleep(0.05)
+            while self.stream.is_active():
+                  print("inside while loop!")
+                  time.sleep(0.01)
+                  for count in range(10):
+                        print("inside for loop!", count)
+                  return count
+                  # return time.sleep(0.01)
+                  # QApplication.processEvents()
+            return
+            # return time.sleep(0.05)
             
       def stop_stream(self):
             print("Stopping Recording!!")
